@@ -52,6 +52,18 @@ describe('Sidebar', () => {
     expect(screen.getByText('PROTOVIEW').closest('button').className).toContain('selected');
   });
 
+  it('returns to the overview via the Overview item', async () => {
+    const onSelect = vi.fn();
+    render(<Sidebar projects={projects} statuses={{}} selectedId="protoview" onSelect={onSelect} onLogout={() => {}} />);
+    await userEvent.click(screen.getByText('Overview'));
+    expect(onSelect).toHaveBeenCalledWith(null);
+  });
+
+  it('marks Overview active when no project is selected', () => {
+    render(<Sidebar projects={projects} statuses={{}} selectedId={null} onSelect={() => {}} onLogout={() => {}} />);
+    expect(screen.getByText('Overview').closest('button').className).toContain('selected');
+  });
+
   it('calls onLogout from the footer button', async () => {
     const onLogout = vi.fn();
     render(<Sidebar projects={projects} statuses={{}} selectedId={null} onSelect={() => {}} onLogout={onLogout} />);

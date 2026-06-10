@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { Sidebar } from './Sidebar';
 import { Viewport } from './Viewport';
+import { Overview } from './Overview';
 import { Toast } from './Toast';
 import { useHubMessages } from '../hooks/useHubMessages';
 
@@ -19,13 +20,7 @@ export function Dashboard({ onLogout }) {
   }, []);
 
   useEffect(() => {
-    api
-      .projects()
-      .then((list) => {
-        setProjects(list);
-        setSelectedId((cur) => cur || (list[0] && list[0].id) || null);
-      })
-      .catch(() => {});
+    api.projects().then(setProjects).catch(() => {});
     refreshStatuses();
     const timer = setInterval(refreshStatuses, STATUS_POLL_MS);
     return () => clearInterval(timer);
@@ -69,7 +64,11 @@ export function Dashboard({ onLogout }) {
         onSelect={setSelectedId}
         onLogout={handleLogout}
       />
-      <Viewport project={selected} status={selectedId ? statuses[selectedId] : undefined} onRetry={refreshStatuses} />
+      {selected ? (
+        <Viewport project={selected} status={statuses[selected.id]} onRetry={refreshStatuses} />
+      ) : (
+        <Overview projects={projects} statuses={statuses} onSelect={setSelectedId} />
+      )}
       <div className="toasts">
         {toasts.map((t) => (
           <Toast key={t.id} toast={t} onDismiss={dismissToast} />

@@ -24,6 +24,18 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
         </div>
       </div>
       <nav className="sidebar-projects">
+        <button
+          className={`project-item overview-item ${selectedId === null ? 'selected' : ''}`}
+          onClick={() => onSelect(null)}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span className="project-name">Overview</span>
+        </button>
         <p className="nav-label">Projects</p>
         {projects.map((p) => {
           const st = statuses[p.id];
