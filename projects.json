@@ -1,0 +1,18 @@
+[
+  {
+    "id": "code-runner",
+    "name": "Code Runner",
+    "description": "Python compiler & missions for students",
+    "adminUrl": "http://SERVER-IP:8080/admin/monitoring",
+    "healthUrl": "http://SERVER-IP:8080/api/health",
+    "accent": "#22d3ee"
+  },
+  {
+    "id": "protoview",
+    "name": "PROTOVIEW",
+    "description": "3D model review & voting",
+    "adminUrl": "http://SERVER-IP:4000/admin",
+    "healthUrl": "http://SERVER-IP:4000/health",
+    "accent": "#a78bfa"
+  }
+]
