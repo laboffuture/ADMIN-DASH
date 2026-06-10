@@ -1,10 +1,13 @@
 # Module intake — status per module
 
-Derived from code on 2026-06-10. Two host placeholders to fill at deploy time in
-`projects.json`:
-- `SERVER-IP` — the VPS running CODERUNNER and 3D-VIEWER
-- `INTERNAL-HOST` — wherever INTERNAL-AGENTICSYSTEM's docker/nginx stack runs
-  (single origin :80 for feedback, syncflow, timesheet, horilla)
+Derived from code on 2026-06-10. `projects.json` deliberately carries NO URLs for
+unconnected modules — they render as "NOT CONNECTED" placeholder cards. As each
+real address arrives, paste the adminUrl/healthUrl below into the module's entry
+(hosts to substitute: `SERVER-IP` = the VPS for CODERUNNER backend + 3D-VIEWER;
+`INTERNAL-HOST` = wherever INTERNAL-AGENTICSYSTEM's docker/nginx runs;
+CODERUNNER's web is on Railway — HTTPS URL from the Railway dashboard).
+Topology confirmed by user: CODERUNNER frontend on Railway, backend on VPS;
+QC AGENT and the internal system will also run on the VPS.
 
 ## Fully derived (waiting only on host addresses)
 
