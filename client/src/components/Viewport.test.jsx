@@ -1,7 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Viewport } from './Viewport';
+
+afterEach(() => vi.unstubAllGlobals());
 
 const project = {
   id: 'protoview',
@@ -44,6 +46,40 @@ describe('Viewport', () => {
   it('asks to select a project when none is selected', () => {
     render(<Viewport project={null} status={undefined} onRetry={() => {}} />);
     expect(screen.getByText(/select a project/i)).toBeInTheDocument();
+  });
+
+  it('appends a fetched hub_token for sso-enabled modules', async () => {
+    const ssoProject = { ...project, sso: true };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ token: 'tok123' }), { status: 200, headers: { 'Content-Type': 'application/json' } }),
+    ));
+    render(<Viewport project={ssoProject} status={{ status: 'online' }} onRetry={() => {}} />);
+    await waitFor(() => {
+      expect(screen.getByTitle('PROTOVIEW')).toHaveAttribute(
+        'src',
+        'http://10.0.0.5:4000/admin?embed=1&hub_token=tok123',
+      );
+    });
+    expect(fetch).toHaveBeenCalledWith('/api/sso-token/protoview', expect.anything());
+  });
+
+  it('falls back to a tokenless frame when the sso fetch fails', async () => {
+    const ssoProject = { ...project, sso: true };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ error: 'nope' }), { status: 503, headers: { 'Content-Type': 'application/json' } }),
+    ));
+    render(<Viewport project={ssoProject} status={{ status: 'online' }} onRetry={() => {}} />);
+    await waitFor(() => {
+      expect(screen.getByTitle('PROTOVIEW')).toHaveAttribute('src', 'http://10.0.0.5:4000/admin?embed=1');
+    });
+  });
+
+  it('never fetches a token for non-sso modules', () => {
+    const spy = vi.fn();
+    vi.stubGlobal('fetch', spy);
+    render(<Viewport project={project} status={{ status: 'online' }} onRetry={() => {}} />);
+    expect(screen.getByTitle('PROTOVIEW')).toHaveAttribute('src', 'http://10.0.0.5:4000/admin?embed=1');
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('shows a not-connected panel for modules without an adminUrl', () => {

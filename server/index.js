@@ -19,7 +19,13 @@ const auth = createAuth({
 const distPath = path.join(__dirname, '..', 'client', 'dist');
 const clientDist = fs.existsSync(distPath) ? distPath : null;
 
-const app = createApp({ registry, poller, auth, clientDist });
+const app = createApp({
+  registry,
+  poller,
+  auth,
+  clientDist,
+  ssoSecret: process.env.HUB_SSO_SECRET,
+});
 
 poller.start();
 app.listen(PORT, '0.0.0.0', () => {

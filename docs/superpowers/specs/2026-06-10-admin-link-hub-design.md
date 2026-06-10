@@ -71,10 +71,16 @@ The same four agreements for every current and future module:
 v1 handles `{type:'notify', text}` (toast) and ignores unknown types. Modules never
 need this to work — it exists so a module can push events to the hub later.
 
-**Auth:** v1 has no SSO. The hub is gated by one admin password; each module's own
-login still applies inside the frame. Phase-2 option (out of scope): hub-issued
-short-lived signed token (`?hub_token=`) that modules verify with a shared secret —
-chosen over parent-domain cookies because the deployment is IP-based (no shared domain).
+**Auth:** the hub is gated by one admin password; by default each module's own
+login still applies inside the frame. **Phase-2 SSO (hub side implemented
+2026-06-10):** modules flagged `"sso": true` in the registry get
+`&hub_token=<JWT>` appended to their frame URL — HS256-signed with the shared
+`HUB_SSO_SECRET`, `sub: hub-admin`, `aud: <module id>`, 60s TTL, minted per
+frame-mount via auth-gated `GET /api/sso-token/:projectId`. The module verifies
+the token with the same secret and issues ITS OWN session for a designated admin
+account (no passwords stored or transmitted). Chosen over parent-domain cookies
+because the deployment is IP-based (no shared domain). Module-side recipe:
+`docs/integration/CODERUNNER-SSO-BRIEF.md`.
 
 ## 4. Project registry — `projects.json`
 

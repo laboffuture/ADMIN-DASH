@@ -17,6 +17,9 @@ Edit `.env`:
 - `PORT` — port the hub listens on (default 5500)
 - `ADMIN_PASSWORD` — the single hub login password
 - `SESSION_SECRET` — generate: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
+- `HUB_SSO_SECRET` — only needed once modules opt into SSO (`"sso": true` in
+  projects.json). Generate like SESSION_SECRET and set the SAME value in each
+  sso-enabled module's environment.
 
 Edit `projects.json`: replace every `SERVER-IP` with the real host/IP and ports of
 the running projects. This file can be edited any time — the hub picks changes up
