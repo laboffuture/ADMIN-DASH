@@ -1,0 +1,29 @@
+const path = require('path');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+
+// clientDist: absolute path to the built client, or null to skip static serving (dev/tests).
+function createApp({ registry, poller, auth, clientDist }) {
+  const app = express();
+  app.use(express.json());
+  app.use(cookieParser());
+
+  app.post('/api/login', auth.loginHandler);
+  app.post('/api/logout', auth.logoutHandler);
+  app.get('/api/me', auth.requireAuth, (req, res) => res.json({ ok: true }));
+  app.get('/api/projects', auth.requireAuth, (req, res) => res.json(registry.load()));
+  app.get('/api/status', auth.requireAuth, (req, res) => res.json(poller.getStatuses()));
+
+  if (clientDist) {
+    app.use(express.static(clientDist));
+    // SPA fallback for everything that is not an API route
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api/')) return next();
+      res.sendFile(path.join(clientDist, 'index.html'));
+    });
+  }
+
+  return app;
+}
+
+module.exports = { createApp };
