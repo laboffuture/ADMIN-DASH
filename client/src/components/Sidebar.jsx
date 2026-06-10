@@ -9,10 +9,21 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h1>ADMIN-LINK</h1>
-        <p>all projects · one place</p>
+        <span className="brand-chip" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        </span>
+        <div>
+          <h1>ADMIN-LINK</h1>
+          <p>mission control</p>
+        </div>
       </div>
       <nav className="sidebar-projects">
+        <p className="nav-label">Projects</p>
         {projects.map((p) => {
           const st = statuses[p.id];
           const state = st ? st.status : 'unknown';
