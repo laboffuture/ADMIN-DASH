@@ -1,6 +1,11 @@
 # Code Runner — ADMIN-LINK module integration brief
 
-Paste this into the Claude session working in the code-runner-production repo.
+> **STATUS 2026-06-10: module-side work DONE** (committed in
+> code-runner-production `4034884`): nginx X-Frame-Options removed, monitoring
+> page now reads the real `/health/metrics`, embed-mode confirmed free (root +
+> admin layouts are chrome-less). Remaining: redeploy web on Railway (build must
+> have `NEXT_PUBLIC_API_URL` + API `CORS_ORIGIN` incl. the Railway origin),
+> then give the hub the Railway URL.
 
 ---
 
