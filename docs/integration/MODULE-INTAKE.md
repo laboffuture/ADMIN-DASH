@@ -1,57 +1,38 @@
-# Module intake — what the hub needs from every project
+# Module intake — status per module
 
-All 8 modules are registered in `projects.json` and visible in the sidebar.
-A module with no `adminUrl` shows a dashed "not connected yet" dot; the moment
-its URLs are filled in, it goes live — no rebuild, no restart.
+Derived from code on 2026-06-10. Two host placeholders to fill at deploy time in
+`projects.json`:
+- `SERVER-IP` — the VPS running CODERUNNER and 3D-VIEWER
+- `INTERNAL-HOST` — wherever INTERNAL-AGENTICSYSTEM's docker/nginx stack runs
+  (single origin :80 for feedback, syncflow, timesheet, horilla)
 
-**Fast path:** if the project's code lives on this machine
-(`D:\LOF\PROJECTS\...`), just give Claude the folder name + how it's deployed.
-Items 1–7 get derived from the code; you only confirm the deployed URLs.
+## Fully derived (waiting only on host addresses)
 
-## The 8 questions per module
+| Module | Stack | Admin page | Health | Auth | Notes |
+|---|---|---|---|---|---|
+| CODERUNNER | Next.js web + Express API + runner · MongoDB + Redis · PM2 + nginx | `/admin/monitoring` | web `/api/health` | JWT | Open: WHICH codebase is live — `code-runner-production` monorepo or `PRODUCTION\Coderunner-Backend`+`Frontend` split? Plus port (8080 vs 3000). Module work briefed in `CODE-RUNNER-INTEGRATION.md` (nginx X-Frame-Options removal, metrics fix) |
+| STUDENT-FEEDBACK | Next.js (basePath `/feedback`) + FastAPI router in platform backend (FER emotion model) · `apps/feedback` | `/feedback/admin` (sessions, workshops) | platform `/health` | platform login + SSO | Embed-mode (`?embed=1` chrome-hide) not yet implemented |
+| 3D-VIEWER (PROTOVIEW) | Vite/React + Express · MongoDB Atlas · single origin :4000 | `/admin` | `/health` (to be added) | own JWT login | Briefed in `PROTOVIEW-INTEGRATION.md` |
+| SYNC FLOW | Next.js (basePath `/syncflow`) + Genkit · `apps/syncflow` | `/syncflow/admin` | none — hub pings admin page | own login + LOF-SSO | Embed-mode pending |
+| TIMESHEET | TimeWise — Next.js (basePath `/timesheet`) + MongoDB · `apps/timesheet` | `/timesheet/dashboard/admin` | `/timesheet/api/health` ✓ exists | own login + LOF-SSO | Embed-mode pending |
+| HORILLA | Horilla HRMS (Django), self-hosted in `apps/hr/horilla-hr-1.0` | `/hr/` | none — hub pings page | Horilla login | ⚠️ `settings.py:236` sets `X_FRAME_OPTIONS = "SAMEORIGIN"` — blocks the hub's iframe (different origin). Fix: remove XFrameOptionsMiddleware header for hub or add CSP `frame-ancestors 'self' <HUB-ORIGIN>` |
 
-1. **Tech stack ("text tags")** — frontend framework, backend language/framework, database.
-2. **Front ↔ back wiring** — one origin (backend serves the built frontend) or two
-   ports? Any `/api` prefix, proxy, or nginx in between?
-3. **Admin page URL** — the exact deployed address of the admin page
-   (`http://IP:PORT/path`). This is what the hub iframes.
-4. **Admin auth** — does the admin page have its own login? What kind
-   (password / JWT / session cookie)?
-5. **Health URL** — any GET endpoint returning 2xx without auth. If none exists,
-   the project session adds `GET /health` → `200 {"status":"ok"}`.
-6. **Frame headers** — does anything send `X-Frame-Options` or a CSP
-   `frame-ancestors` (helmet defaults, nginx `add_header`, Django's
-   `XFrameOptionsMiddleware` — Django blocks framing BY DEFAULT)? Must allow the
-   hub's origin.
-7. **Embed mode** — can the project hide its own sidebar/topbar when loaded with
-   `?embed=1` or inside an iframe? If the code can't be edited (third-party),
-   say so — the hub falls back to its "open in new tab" button.
-8. **Runtime** — which server it runs on, port, process manager
-   (PM2 / Docker / systemd), so the URLs stay stable.
+## Still open
 
-## Report-back format (one block per module)
+| Module | What's missing |
+|---|---|
+| QC AGENT | Repo is standalone `D:\LOF\PROJECTS\LOF\QC_AGENT` (React/Vite + FastAPI :8000 + 6-layer pipeline; monorepo `apps/qc` is an empty placeholder). PM2 config runs it ON THIS WINDOWS PC. Need: where it will run for the team + how the frontend is served in prod (port), then it gets URLs |
+| WEBSITE | Everything: what is it (WordPress? custom?), what "admin" means for it, URL |
 
-```
-MODULE: <name>
-stack: <frontend> + <backend> + <db>
-wiring: <one origin :PORT | front :A / back :B>
-adminUrl: http://<ip>:<port>/<path>
-auth: <own login? type>
-healthUrl: http://<ip>:<port>/<path>
-frame headers: <none | which, where>
-embed mode: <done | will add | impossible (third-party)>
-runtime: <server, PM2/docker, port>
-```
+## Host addresses needed (the only blockers for going live)
 
-## Current status per module
+1. `SERVER-IP` — VPS for CODERUNNER + 3D-VIEWER (+ which Coderunner codebase is deployed)
+2. `INTERNAL-HOST` — machine running the INTERNAL-AGENTICSYSTEM docker stack
+3. QC AGENT serving decision · 4. WEBSITE details
 
-| Module | Known so far | Still needed |
-|---|---|---|
-| CODERUNNER | Full stack known (Next.js + Express API + runner, MongoDB+Redis, PM2+nginx). Briefed in `CODE-RUNNER-INTEGRATION.md` | Server IP; how the web app runs in prod (port 8080 vs 3000, no PM2 entry); nginx X-Frame-Options removal; metrics endpoint fix |
-| STUDENT-FEEDBACK | Nothing | Everything (or repo folder) — also confirm it's separate from 3D-VIEWER's voting |
-| 3D-VIEWER (PROTOVIEW) | Full stack known (Vite/React + Express + MongoDB Atlas, single origin :4000). Briefed in `PROTOVIEW-INTEGRATION.md` | Server IP; `GET /health`; embed mode |
-| QC AGENT | Nothing | Everything (or repo folder) |
-| SYNC FLOW | Nothing | Everything (or repo folder) |
-| TIMESHEET | Nothing | Everything (or repo folder) |
-| HORILLA | Third-party Django HRMS. Django sends `X-Frame-Options: DENY` by default → iframe will be blank until its settings allow the hub | Where it's hosted (IP:port); self-hosted & editable? If not editable → new-tab mode |
-| WEBSITE | Nothing | What "admin" means here (CMS like WordPress wp-admin? custom?) + URL |
+## Module-side work queue (for each project's Claude session, when ready)
+
+- CODERUNNER: per `CODE-RUNNER-INTEGRATION.md`
+- 3D-VIEWER: per `PROTOVIEW-INTEGRATION.md`
+- STUDENT-FEEDBACK / SYNC FLOW / TIMESHEET: add `?embed=1` chrome-hide to the admin layout
+- HORILLA: replace `X_FRAME_OPTIONS = "SAMEORIGIN"` with hub-allowing CSP frame-ancestors

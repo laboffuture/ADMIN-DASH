@@ -11,6 +11,8 @@
     "id": "student-feedback",
     "name": "STUDENT-FEEDBACK",
     "description": "camera-based class ratings — smiles & hand-gesture stars",
+    "adminUrl": "http://INTERNAL-HOST/feedback/admin",
+    "healthUrl": "http://INTERNAL-HOST/health",
     "accent": "#DB2777"
   },
   {
@@ -24,25 +26,29 @@
   {
     "id": "qc-agent",
     "name": "QC AGENT",
-    "description": "quality control agent",
+    "description": "AI quality control for STEM manuals",
     "accent": "#D97706"
   },
   {
     "id": "sync-flow",
     "name": "SYNC FLOW",
-    "description": "sync workflows",
+    "description": "CRM — projects, tasks, broadcasts",
+    "adminUrl": "http://INTERNAL-HOST/syncflow/admin",
     "accent": "#0D9488"
   },
   {
     "id": "timesheet",
     "name": "TIMESHEET",
-    "description": "time tracking",
+    "description": "TimeWise — daily work logs & leave",
+    "adminUrl": "http://INTERNAL-HOST/timesheet/dashboard/admin",
+    "healthUrl": "http://INTERNAL-HOST/timesheet/api/health",
     "accent": "#7C3AED"
   },
   {
     "id": "horilla",
     "name": "HORILLA",
-    "description": "HR management (Horilla HRMS)",
+    "description": "HR — employees, leave, attendance, payroll",
+    "adminUrl": "http://INTERNAL-HOST/hr/",
     "accent": "#0EA5E9"
   },
   {
