@@ -3,7 +3,7 @@
     "id": "coderunner",
     "name": "CODERUNNER",
     "description": "Python compiler & missions for students",
-    "adminUrl": "https://code-runner-production.up.railway.app/admin/monitoring",
+    "adminUrl": "https://code-runner-production.up.railway.app/oversight/dashboard",
     "healthUrl": "https://code-runner-production.up.railway.app/api/health",
     "accent": "#76B900"
   },
