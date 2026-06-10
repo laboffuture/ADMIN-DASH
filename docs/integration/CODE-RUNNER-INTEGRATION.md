@@ -10,30 +10,40 @@ implement only the module contract below.
 
 ## Tasks
 
-1. **Embedded mode (required).** When the admin UI (`apps/web/src/app/admin/`,
-   currently the monitoring dashboard at `/admin/monitoring`) is displayed inside
-   the hub's iframe, hide the app's own global chrome (any site-wide nav/branding
-   rendered around admin pages, see `apps/web/src/app/admin/layout.tsx`) and render
-   only the dashboard content.
-   - Detection: `window.self !== window.top` (needs a small client component since
-     this is Next.js App Router), plus support `?embed=1` as an explicit override
-     for testing in a normal tab.
-   - Everything must look/work unchanged when NOT embedded.
+1. **Embedded mode — likely already satisfied, verify.** `apps/web/src/app/admin/layout.tsx`
+   is a pass-through (no site-wide nav/branding around admin pages), so the
+   monitoring dashboard at `/admin/monitoring` should already render chrome-free
+   inside an iframe. Verify with the acceptance check below; only if some global
+   chrome appears, hide it when `window.self !== window.top` (small client
+   component) or `?embed=1` is present.
 
-2. **Never block framing (constraint, ongoing).** Do not add `X-Frame-Options`
-   or restrictive CSP `frame-ancestors` — neither in `next.config`, middleware,
-   nor the deployed `nginx.conf` (currently clean, keep it that way). If security
-   headers are added later, use
-   `Content-Security-Policy: frame-ancestors 'self' <HUB-ORIGIN>`.
+2. **Remove the frame-blocking nginx header (required before web goes behind nginx).**
+   `nginx.conf` line 21 sets `add_header X-Frame-Options "SAMEORIGIN" always;`.
+   Today that block only serves `/api/` and `/health` (`location /` returns 404),
+   so the admin page isn't affected yet — but the moment the web app is routed
+   through this nginx, the hub's iframe goes blank. Remove that line, or replace
+   with `Content-Security-Policy: frame-ancestors 'self' <HUB-ORIGIN>` on the
+   admin routes. Same rule for `next.config`/middleware: never add `X-Frame-Options`.
 
-3. **Health endpoints — already done.** `apps/web` already serves `/api/health`
-   and the API serves `/health`; the hub will use `/api/health` (checks the app
+3. **Fix the monitoring page's data source (required for live stats).**
+   `apps/web/src/app/admin/monitoring/page.tsx` fetches `/api/admin/metrics`
+   (marked `// TODO: Replace with actual API endpoint`) — that route does not
+   exist. The API actually exposes `GET /health/metrics` (`apps/api/src/index.ts`,
+   ~line 156). Point the page at the real endpoint (via the nginx `/api/` rewrite
+   that strips the prefix, `/api/health/metrics` → API `/health/metrics`), so the
+   dashboard shows real numbers instead of erroring.
+
+4. **Health endpoints — already done.** `apps/web` serves `/api/health` and the
+   API serves `/health`; the hub will use the web's `/api/health` (checks the app
    that actually serves the admin UI). No work needed unless those are removed.
 
 ## Report back (needed for the hub's registry)
 
-- Deployed admin page URL (e.g. `http://<server-ip>:3000/admin/monitoring`)
-- Health URL (e.g. `http://<server-ip>:3000/api/health`)
+- How the web app is served in production (PM2 `next start` on the VPS? Railway?)
+  and its final URL — note `start:prod` defaults to port **8080**, `start`/`dev`
+  to **3000**, and `ecosystem.config.js` currently has no web process at all.
+- Deployed admin page URL (e.g. `http://<server-ip>:8080/admin/monitoring`)
+- Health URL (e.g. `http://<server-ip>:8080/api/health`)
 
 ## Acceptance check
 

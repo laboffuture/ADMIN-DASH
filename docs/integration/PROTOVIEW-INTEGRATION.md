@@ -31,8 +31,12 @@ implement only the module contract below.
 
 ## Report back (needed for the hub's registry)
 
-- Deployed admin page URL (e.g. `http://<server-ip>:<port>/admin`)
-- Health URL (e.g. `http://<server-ip>:4000/health`)
+In production the Express server (PORT, default 4000) serves the built client
+itself (`server/index.js` serves `client/dist` with SPA fallback), so everything
+is one origin:
+
+- Deployed admin page URL (e.g. `http://<server-ip>:4000/admin`)
+- Health URL (`http://<server-ip>:4000/health` once task 2 is done; until then `/` returns 200)
 
 ## Acceptance check
 

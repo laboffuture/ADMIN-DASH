@@ -50,9 +50,12 @@ The same four agreements for every current and future module:
 
 1. **Registry entry on the hub** (§4). This is the entire hub-side connection.
 2. **Framing allowed.** The module must not send `X-Frame-Options: DENY/SAMEORIGIN`
-   or a `frame-ancestors` CSP that excludes the hub. Verified 2026-06-10: neither
-   code-runner-production nor 3dviewer sends any such header today. If headers are
-   added later, allowlist the hub origin.
+   or a `frame-ancestors` CSP that excludes the hub. Verified 2026-06-10: the app
+   code of both projects is clean, but code-runner's `nginx.conf` (line 21) sets
+   `X-Frame-Options "SAMEORIGIN"` — harmless today (that block 404s non-API routes)
+   but it must be removed/replaced with a hub-allowlisting `frame-ancestors` before
+   the web app is served through that nginx. Tracked in the code-runner integration
+   brief.
 3. **Embedded mode.** When loaded with `?embed=1` (or `window.self !== window.top`),
    the module hides its own global chrome (topbar/sidebar/branding) and renders only
    the dashboard content, so the hub doesn't show nav-inside-nav.
@@ -81,16 +84,16 @@ chosen over parent-domain cookies because the deployment is IP-based (no shared 
     "id": "code-runner",
     "name": "Code Runner",
     "description": "Python compiler & missions for students",
-    "adminUrl": "http://SERVER-IP:3000/admin",
-    "healthUrl": "http://SERVER-IP:4000/health",
+    "adminUrl": "http://SERVER-IP:8080/admin/monitoring",
+    "healthUrl": "http://SERVER-IP:8080/api/health",
     "accent": "#22d3ee"
   },
   {
     "id": "protoview",
     "name": "PROTOVIEW",
     "description": "3D model review & voting",
-    "adminUrl": "http://SERVER-IP:4173/admin",
-    "healthUrl": "http://SERVER-IP:4000/",
+    "adminUrl": "http://SERVER-IP:4000/admin",
+    "healthUrl": "http://SERVER-IP:4000/health",
     "accent": "#a78bfa"
   }
 ]
