@@ -15,6 +15,7 @@ export function Viewport({ project, status, onRetry }) {
     );
   }
 
+  const notConnected = !project.adminUrl;
   const down = status && status.status === 'down';
 
   return (
@@ -22,12 +23,19 @@ export function Viewport({ project, status, onRetry }) {
       <div className="toolbar">
         <span className="toolbar-title">{project.name}</span>
         <span className="toolbar-desc">{project.description}</span>
-        <span className="toolbar-actions">
-          <button onClick={() => setFrameKey((k) => k + 1)} title="Reload frame">↻ reload</button>
-          <a href={project.adminUrl} target="_blank" rel="noreferrer" title="Open in new tab">↗ new tab</a>
-        </span>
+        {!notConnected && (
+          <span className="toolbar-actions">
+            <button onClick={() => setFrameKey((k) => k + 1)} title="Reload frame">↻ reload</button>
+            <a href={project.adminUrl} target="_blank" rel="noreferrer" title="Open in new tab">↗ new tab</a>
+          </span>
+        )}
       </div>
-      {down ? (
+      {notConnected ? (
+        <div className="down-panel">
+          <h2>{project.name} is not connected yet</h2>
+          <p>Waiting for this project's admin page address — it will appear here automatically once configured.</p>
+        </div>
+      ) : down ? (
         <div className="down-panel">
           <h2>{project.name} is not responding</h2>
           <p>The hub keeps checking every 30 seconds.</p>

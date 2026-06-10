@@ -27,6 +27,19 @@ describe('Sidebar', () => {
     expect(screen.getByText('Code Runner').closest('button').querySelector('.dot-unknown')).not.toBeNull();
   });
 
+  it('shows a pending dot for modules that are not connected yet', () => {
+    const pendingProjects = [{ id: 'qc-agent', name: 'QC AGENT' }];
+    const statuses = { 'qc-agent': { status: 'pending', latencyMs: null } };
+    render(<Sidebar projects={pendingProjects} statuses={statuses} selectedId={null} onSelect={() => {}} onLogout={() => {}} />);
+    expect(screen.getByText('QC AGENT').closest('button').querySelector('.dot-pending')).not.toBeNull();
+  });
+
+  it('offers no way to add a module', () => {
+    render(<Sidebar projects={projects} statuses={{}} selectedId={null} onSelect={() => {}} onLogout={() => {}} />);
+    expect(screen.queryByText(/add a project/i)).toBeNull();
+    expect(screen.queryByText(/projects\.json/i)).toBeNull();
+  });
+
   it('reports the clicked project id', async () => {
     const onSelect = vi.fn();
     render(<Sidebar projects={projects} statuses={{}} selectedId={null} onSelect={onSelect} onLogout={() => {}} />);

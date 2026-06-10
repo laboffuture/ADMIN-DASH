@@ -1,18 +1,54 @@
 [
   {
-    "id": "code-runner",
-    "name": "Code Runner",
+    "id": "coderunner",
+    "name": "CODERUNNER",
     "description": "Python compiler & missions for students",
     "adminUrl": "http://SERVER-IP:8080/admin/monitoring",
     "healthUrl": "http://SERVER-IP:8080/api/health",
     "accent": "#76B900"
   },
   {
-    "id": "protoview",
-    "name": "PROTOVIEW",
-    "description": "3D model review & voting",
+    "id": "student-feedback",
+    "name": "STUDENT-FEEDBACK",
+    "description": "student feedback collection",
+    "accent": "#DB2777"
+  },
+  {
+    "id": "3d-viewer",
+    "name": "3D-VIEWER",
+    "description": "PROTOVIEW — 3D model review & voting",
     "adminUrl": "http://SERVER-IP:4000/admin",
     "healthUrl": "http://SERVER-IP:4000/health",
     "accent": "#1C4D8C"
+  },
+  {
+    "id": "qc-agent",
+    "name": "QC AGENT",
+    "description": "quality control agent",
+    "accent": "#D97706"
+  },
+  {
+    "id": "sync-flow",
+    "name": "SYNC FLOW",
+    "description": "sync workflows",
+    "accent": "#0D9488"
+  },
+  {
+    "id": "timesheet",
+    "name": "TIMESHEET",
+    "description": "time tracking",
+    "accent": "#7C3AED"
+  },
+  {
+    "id": "horilla",
+    "name": "HORILLA",
+    "description": "HR management (Horilla HRMS)",
+    "accent": "#0EA5E9"
+  },
+  {
+    "id": "website",
+    "name": "WEBSITE",
+    "description": "public website",
+    "accent": "#475569"
   }
 ]

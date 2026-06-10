@@ -100,7 +100,10 @@ chosen over parent-domain cookies because the deployment is IP-based (no shared 
 ```
 
 - URLs above are examples; real host/ports are filled in at deploy time (`projects.json`
-  is environment config, not code).
+  is environment config, not code). `adminUrl`/`healthUrl` are optional — a module
+  without them is listed as "not connected yet" (status `pending`) until filled in.
+  Registered modules (amended 2026-06-10): CODERUNNER, STUDENT-FEEDBACK,
+  3D-VIEWER (PROTOVIEW), QC AGENT, SYNC FLOW, TIMESHEET, HORILLA, WEBSITE.
 - The server re-reads the file on each `/api/projects` request → **adding a module =
   edit file, refresh browser.** No rebuild, no restart.
 - Invalid JSON ⇒ server logs the parse error and keeps serving the last good registry.
@@ -110,9 +113,12 @@ chosen over parent-domain cookies because the deployment is IP-based (no shared 
 - **Login screen** — single password field (checked against `ADMIN_PASSWORD` env var);
   on success an httpOnly signed session cookie is set.
 - **Main screen** — left sidebar: project list with status dot (● online, ● error,
-  ○ down) + latency; footer "add a project = edit projects.json".
+  ○ down, ◌ pending/not-connected) + latency; footer holds only Sign out — the
+  dashboard deliberately offers NO way to add/edit modules (amended 2026-06-10:
+  module management is file-only via projects.json, never from the UI).
   Main area: toolbar (project name, ↻ reload frame, ↗ open in new tab) above a
-  full-height iframe of `adminUrl?embed=1`.
+  full-height iframe of `adminUrl?embed=1`. Modules without an adminUrl yet show
+  a "not connected yet" panel instead of a frame.
 - **Down module** — viewport shows "PROJECT is not responding" panel (with retry +
   new-tab buttons) instead of a broken frame.
 - Client polls `/api/status` every 30s and re-renders dots without reloading frames.

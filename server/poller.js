@@ -6,6 +6,16 @@ function createPoller(getProjects, { intervalMs = 30000, timeoutMs = 5000, fetch
 
   async function checkProject(project) {
     const url = project.healthUrl || project.adminUrl;
+    if (!url) {
+      // Module registered but not connected yet — nothing to ping.
+      statuses[project.id] = {
+        status: 'pending',
+        httpStatus: null,
+        latencyMs: null,
+        lastChecked: new Date().toISOString(),
+      };
+      return;
+    }
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
     const started = Date.now();

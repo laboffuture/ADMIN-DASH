@@ -51,6 +51,17 @@ describe('createPoller', () => {
     expect(statuses.b.status).toBe('down');
   });
 
+  it('marks projects without any URL as pending instead of fetching', async () => {
+    const seen = [];
+    const spyFetch = async (url) => { seen.push(url); return { status: 200 }; };
+    const withPending = [...projects, { id: 'c', name: 'C' }];
+    const poller = createPoller(() => withPending, { fetchFn: spyFetch });
+    const statuses = await poller.checkAll();
+    expect(statuses.c).toMatchObject({ status: 'pending', httpStatus: null, latencyMs: null });
+    expect(typeof statuses.c.lastChecked).toBe('string');
+    expect(seen).toHaveLength(2);
+  });
+
   it('checks healthUrl when present, otherwise adminUrl', async () => {
     const seen = [];
     const spyFetch = async (url) => { seen.push(url); return { status: 200 }; };

@@ -2,6 +2,7 @@ const DOT_TITLE = {
   online: 'online',
   error: 'responding with errors',
   down: 'not responding',
+  pending: 'not connected yet',
   unknown: 'checking…',
 };
 
@@ -43,7 +44,6 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
         {projects.length === 0 && <p className="sidebar-empty">No projects yet.</p>}
       </nav>
       <footer className="sidebar-footer">
-        <p>add a project → edit projects.json</p>
         <button className="logout" onClick={onLogout}>Sign out</button>
       </footer>
     </aside>

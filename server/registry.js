@@ -5,7 +5,10 @@ function validateProjects(data) {
   for (const p of data) {
     if (typeof p.id !== 'string' || !p.id) throw new Error('every project needs a string "id"');
     if (typeof p.name !== 'string' || !p.name) throw new Error(`project "${p.id}": missing "name"`);
-    if (typeof p.adminUrl !== 'string' || !p.adminUrl) throw new Error(`project "${p.id}": missing "adminUrl"`);
+    // adminUrl is optional: modules without one are listed as "not connected yet"
+    if (p.adminUrl !== undefined && (typeof p.adminUrl !== 'string' || !p.adminUrl)) {
+      throw new Error(`project "${p.id}": "adminUrl" must be a non-empty string when present`);
+    }
   }
   return data;
 }

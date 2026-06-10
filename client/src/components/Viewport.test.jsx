@@ -45,4 +45,12 @@ describe('Viewport', () => {
     render(<Viewport project={null} status={undefined} onRetry={() => {}} />);
     expect(screen.getByText(/select a project/i)).toBeInTheDocument();
   });
+
+  it('shows a not-connected panel for modules without an adminUrl', () => {
+    const pending = { id: 'qc-agent', name: 'QC AGENT', description: 'quality control agent' };
+    render(<Viewport project={pending} status={{ status: 'pending' }} onRetry={() => {}} />);
+    expect(screen.getByText(/not connected yet/i)).toBeInTheDocument();
+    expect(document.querySelector('iframe')).toBeNull();
+    expect(screen.queryByTitle('Open in new tab')).toBeNull();
+  });
 });

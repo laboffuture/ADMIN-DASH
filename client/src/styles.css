@@ -111,6 +111,7 @@ button { font: inherit; cursor: pointer; }
 .dot-online { background: var(--online); animation: pulse 2s ease-in-out infinite; }
 .dot-error { background: var(--warn); }
 .dot-down { background: transparent; border: 2px solid var(--down); width: 9px; height: 9px; }
+.dot-pending { background: transparent; border: 2px dashed var(--down); width: 9px; height: 9px; opacity: 0.8; }
 .dot-unknown { background: var(--down); opacity: 0.5; }
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.35); }
@@ -119,10 +120,6 @@ button { font: inherit; cursor: pointer; }
 
 /* zone 3 — logout pinned bottom (only red element, hover only) */
 .sidebar-footer { padding: 14px 16px; border-top: 2px solid var(--border); }
-.sidebar-footer p {
-  margin: 0 0 10px; font-family: var(--font-mono); font-size: 10px;
-  color: var(--text-muted);
-}
 .logout {
   width: 100%; padding: 8px; border-radius: var(--radius-control);
   background: var(--surface); color: var(--text-secondary);

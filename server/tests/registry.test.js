@@ -37,8 +37,15 @@ describe('createRegistry', () => {
     fs.writeFileSync(file, JSON.stringify(VALID));
     const registry = createRegistry(file);
     registry.load();
-    fs.writeFileSync(file, JSON.stringify([{ name: 'no id or adminUrl' }]));
+    fs.writeFileSync(file, JSON.stringify([{ name: 'no id' }]));
     expect(registry.load()).toEqual(VALID);
+  });
+
+  it('accepts entries without adminUrl (pending modules)', () => {
+    const pending = [{ id: 'qc-agent', name: 'QC AGENT' }];
+    fs.writeFileSync(file, JSON.stringify(pending));
+    const registry = createRegistry(file);
+    expect(registry.load()).toEqual(pending);
   });
 
   it('returns an empty list when the file was never valid', () => {
