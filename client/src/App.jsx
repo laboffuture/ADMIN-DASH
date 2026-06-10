@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from './api';
 import { Login } from './components/Login';
+import { Dashboard } from './components/Dashboard';
 
 export function App() {
   const [authed, setAuthed] = useState(null); // null = checking session
@@ -11,5 +12,5 @@ export function App() {
 
   if (authed === null) return <div className="boot">ADMIN-LINK</div>;
   if (!authed) return <Login onSuccess={() => setAuthed(true)} />;
-  return <div className="boot">signed in — dashboard lands in Task 10</div>;
+  return <Dashboard onLogout={() => setAuthed(false)} />;
 }
