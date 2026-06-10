@@ -5,6 +5,7 @@ live status dot and shows the selected project's existing admin page inside the
 hub (iframe with `?embed=1`). Projects are registered in `projects.json` — adding
 a module is one JSON entry, no rebuild.
 
+- **Architecture (start here): `ARCHITECTURE.md`**
 - Design spec: `docs/superpowers/specs/2026-06-10-admin-link-hub-design.md`
 - Module integration briefs: `docs/integration/`
 - Deployment: `DEPLOY.md`
