@@ -1,7 +1,7 @@
-# MANGO BRIEF — concept & build notes
+# TECH RADAR — concept & build notes
 
 > Status: **named & registered in the hub (2026-06-11), not built yet.**
-> Registry entry: `mango-brief` / "MANGO BRIEF" / accent `#CA8A04` (mango gold).
+> Registry entry: `tech-radar` / "TECH RADAR" / accent `#CA8A04` (gold).
 > This doc is the starting brief for the session/repo that will build it.
 
 ## What it is
@@ -11,9 +11,11 @@ what the chip supply chain did, who is IPO-ing, and what the world (especially
 China) announced — readable in five minutes every morning. Claude does the
 summarizing; nobody reads forty articles.
 
-The name: **MANGO** = **M**eta · **A**pple · **N**vidia · **G**oogle · **O**penAI
-(the owner's acronym). Anthropic, Microsoft, Amazon, TSMC, ASML ride along in
-the watchlist even though they're not in the letters.
+The name: a radar that sweeps the global tech landscape daily and surfaces the
+blips that matter. The big-tech watchlist keeps the owner's **MANGO** acronym as
+its nickname: **M**eta · **A**pple · **N**vidia · **G**oogle · **O**penAI —
+with Anthropic, Microsoft, Amazon, TSMC, ASML riding along even though they're
+not in the letters.
 
 ## The daily brief — five sections
 
@@ -62,10 +64,10 @@ port.
 Same five promises as every module (`ARCHITECTURE.md` §3): allow framing,
 support `?embed=1`, expose a no-auth `GET /health`, optional postMessage
 ("today's brief is ready" toast would be lovely), optional SSO. Then fill in
-`adminUrl` + `healthUrl` on the `mango-brief` entry — no hub code changes.
+`adminUrl` + `healthUrl` on the `tech-radar` entry — no hub code changes.
 
 ## Relation to backlog #24 ("Morning Brief")
 
-#24 is the **internal** morning digest (our own modules' stats). MANGO BRIEF is
+#24 is the **internal** morning digest (our own modules' stats). TECH RADAR is
 the **external** world. They can eventually merge into one morning read —
-"the world + the company" — but build MANGO BRIEF standalone first.
+"the world + the company" — but build TECH RADAR standalone first.
