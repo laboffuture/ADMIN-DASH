@@ -28,3 +28,9 @@ Theme: the hub already sees everything — these make it *say* something
 9. **Weekly trends report** — Monday auto-generated week-over-week PDF/email.
 10. **Hub SSO** — phase-2 signed-token exchange (spec §3): one login unlocks
     every module inside the frames.
+
+---
+
+Future **module** concepts (separate projects, registered as placeholders):
+`docs/integration/CEO-MODULES.md` (NORTH STAR · LEDGER · STUDENT 360 ·
+BOARDROOM · PAPER TRAIL) and `docs/integration/TECH-RADAR-CONCEPT.md`.

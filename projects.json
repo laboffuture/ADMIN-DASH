@@ -57,6 +57,36 @@
     "accent": "#CA8A04"
   },
   {
+    "id": "north-star",
+    "name": "NORTH STAR",
+    "description": "company goals — OKRs, KPIs, quarterly targets",
+    "accent": "#4F46E5"
+  },
+  {
+    "id": "ledger",
+    "name": "LEDGER",
+    "description": "money in one view — revenue, expenses, invoices, burn",
+    "accent": "#15803D"
+  },
+  {
+    "id": "student-360",
+    "name": "STUDENT 360",
+    "description": "every student across all products — engagement & outcomes",
+    "accent": "#0891B2"
+  },
+  {
+    "id": "boardroom",
+    "name": "BOARDROOM",
+    "description": "investor updates, board decks, decision log",
+    "accent": "#1E293B"
+  },
+  {
+    "id": "paper-trail",
+    "name": "PAPER TRAIL",
+    "description": "contracts, licenses & visas — renewals before they bite",
+    "accent": "#92400E"
+  },
+  {
     "id": "website",
     "name": "WEBSITE",
     "description": "public website",

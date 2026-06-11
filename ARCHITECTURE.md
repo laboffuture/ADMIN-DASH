@@ -274,6 +274,7 @@ Current module endpoints (placeholders until each host is known):
 | QC AGENT | standalone FastAPI+React, heading to VPS | awaiting serving decision |
 | SOCIAL PULSE | social-media agents (project starting) | placeholder, awaiting build |
 | TECH RADAR | global tech-news briefing (`docs/integration/TECH-RADAR-CONCEPT.md`) | placeholder, awaiting build |
+| NORTH STAR / LEDGER / STUDENT 360 / BOARDROOM / PAPER TRAIL | CEO command-center set (`docs/integration/CEO-MODULES.md`) | placeholders, awaiting build |
 | WEBSITE | unknown | awaiting details |
 
 ---
