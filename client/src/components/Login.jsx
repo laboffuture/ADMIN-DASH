@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { api } from '../api';
-import { ClaudeMark } from './ClaudeMark';
 
 export function Login({ onSuccess }) {
   const [password, setPassword] = useState('');
@@ -24,7 +23,6 @@ export function Login({ onSuccess }) {
   return (
     <div className="login-screen">
       <form className="login-card" onSubmit={submit}>
-        <ClaudeMark />
         <h1>ADMIN-LINK</h1>
         <p className="login-sub">central admin hub</p>
         <input

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-// Decorative Lottie mark (client/public/anim/claude.json). Purely cosmetic:
-// any failure renders nothing rather than breaking login. The player library
-// is imported lazily so it stays out of the main bundle (and out of jsdom,
-// where lottie-web cannot evaluate).
-export function ClaudeMark({ size = 150 }) {
+// Loads the decorative Lottie (client/public/anim/claude.json) plus the
+// player library, lazily: the player stays out of the main bundle (and out
+// of jsdom, where lottie-web cannot evaluate). Resolves to null on any
+// failure — callers render nothing rather than breaking the hub.
+export function useClaudeAnim() {
   const [anim, setAnim] = useState(null);
 
   useEffect(() => {
@@ -18,6 +18,11 @@ export function ClaudeMark({ size = 150 }) {
     return () => { mounted = false; };
   }, []);
 
+  return anim;
+}
+
+export function ClaudeMark({ size = 150 }) {
+  const anim = useClaudeAnim();
   if (!anim) return null;
   const { Lottie, data } = anim;
   return (

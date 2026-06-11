@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { HubPet } from './HubPet';
 import { Viewport } from './Viewport';
 import { Overview } from './Overview';
 import { Toast } from './Toast';
@@ -81,6 +82,7 @@ export function Dashboard({ onLogout }) {
         ) : (
           <Overview projects={projects} statuses={statuses} onSelect={setSelectedId} />
         )}
+        <HubPet />
       </div>
       <div className="toasts">
         {toasts.map((t) => (
