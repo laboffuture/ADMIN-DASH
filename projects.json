@@ -45,6 +45,12 @@
     "accent": "#0EA5E9"
   },
   {
+    "id": "social-pulse",
+    "name": "SOCIAL PULSE",
+    "description": "AI agents running & tracking social media",
+    "accent": "#C026D3"
+  },
+  {
     "id": "website",
     "name": "WEBSITE",
     "description": "public website",

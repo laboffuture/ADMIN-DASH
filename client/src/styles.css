@@ -52,6 +52,29 @@ button { font: inherit; cursor: pointer; }
 
 /* ── layout ── */
 .hub-layout { display: flex; height: 100%; }
+.hub-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* ── topbar: date left, FX rates right ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 46px; padding: 8px 16px;
+  background: var(--surface); border-bottom: 2px solid var(--border);
+}
+.topbar-date {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; color: var(--text-muted);
+}
+.topbar-rates { display: flex; gap: 8px; }
+.fx-chip {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  padding: 5px 10px; border-radius: var(--radius-control);
+  background: var(--brand-bg); border: 1px solid var(--brand-border);
+}
+.fx-label {
+  font-family: var(--font-heading); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; color: var(--brand);
+}
+.fx-value { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text-primary); }
 
 /* ── sidebar: fixed 256px white, 2px right border, three zones ── */
 .sidebar {

@@ -21,11 +21,14 @@ flowchart LR
     end
 
     subgraph Hub["Hub server (Express, one PM2 process, :5500)"]
-        API["/api: login · projects · status · sso-token"]
+        API["/api: login · projects · status · rates · sso-token"]
         REG["registry.js\nreads projects.json per request"]
         POLL["poller.js\npings every module each 30s"]
+        RATES["rates.js\nFX cache (AED/USD→INR), hourly"]
         STATIC["serves built client (client/dist)"]
     end
+
+    FXP["open.er-api.com\n(keyless FX provider)"]
 
     subgraph Modules["Independently deployed projects"]
         CR["CODERUNNER\n(Railway, HTTPS)"]
@@ -37,6 +40,8 @@ flowchart LR
     UI -->|"fetch /api/* (same origin)"| API
     API --> REG
     API --> POLL
+    API --> RATES
+    RATES -->|"GET /v6/latest/USD, hourly"| FXP
     POLL -->|"GET healthUrl, 5s timeout"| CR & PV & IAS
     IFR -->|"loads adminUrl?embed=1 directly\n(plain navigation, no proxy)"| CR
     IFR -.->|"window.parent.postMessage\n(origin-checked)"| UI
@@ -67,13 +72,14 @@ ADMIN-LINK/
 │  ├─ auth.js             ← single-password login → JWT httpOnly cookie (12h)
 │  ├─ registry.js         ← projects.json loader with last-good fallback
 │  ├─ poller.js           ← 30s health checks, 5s timeout, in-memory status cache
-│  └─ tests/              ← Vitest + Supertest (auth, registry, poller, api, sso)
+│  ├─ rates.js            ← hourly FX fetch (AED→INR, USD→INR), last-good cache
+│  └─ tests/              ← Vitest + Supertest (auth, registry, poller, rates, api, sso)
 ├─ client/                ← Vite + React 18 frontend
 │  └─ src/
 │     ├─ App.jsx          ← session gate: boot → Login | Dashboard
 │     ├─ api.js           ← thin fetch helpers for /api/*
 │     ├─ styles.css       ← ALL theming (LOF style gate via CSS variables)
-│     ├─ components/      ← Login · Dashboard · Sidebar · Overview · Viewport · Toast
+│     ├─ components/      ← Login · Dashboard · Topbar · Sidebar · Overview · Viewport · Toast
 │     └─ hooks/useHubMessages.js  ← postMessage listener (origin allowlist)
 └─ docs/
    ├─ superpowers/        ← design spec + implementation plan (how this was built)
@@ -134,6 +140,7 @@ independently testable with fakes (see `server/tests/api.test.js`).
 | `auth.js` | `POST /api/login` checks `ADMIN_PASSWORD` (constant-time hash compare), sets `admlink_session` — an **httpOnly, SameSite=Lax JWT cookie, 12h** | No user table; one shared admin password by design. `requireAuth` guards every data route |
 | `registry.js` | `load()` → parse + validate `projects.json` | Last-good fallback; validation requires `id` + `name`, everything else optional |
 | `poller.js` | `start()` checks all modules every **30s** in parallel, **5s abort-timeout** each | Status model in §5; uses healthUrl, falls back to adminUrl; pure in-memory cache served by `GET /api/status` |
+| `rates.js` | Fetches USD-based FX **hourly** from `open.er-api.com` (keyless), caches `usdInr` + derived `aedInr` | Company is Dubai-based with an Indian team → topbar shows AED→INR and USD→INR; failures keep last-good rates; provider updates daily so hourly is plenty |
 | `app.js` | Routes + serves `client/dist` with SPA fallback | Also mints SSO tokens: `GET /api/sso-token/:projectId` (§6) |
 
 API surface (all JSON, all auth-gated except login):
@@ -144,6 +151,7 @@ POST /api/logout               → clears cookie
 GET  /api/me                   → 200 if session valid (client boot check)
 GET  /api/projects             → registry array (hot from disk)
 GET  /api/status               → { [id]: {status, httpStatus, latencyMs, lastChecked} }
+GET  /api/rates                → { rates: {usdInr, aedInr, fetchedAt} | null }
 GET  /api/sso-token/:projectId → { token } (60s JWT, only for sso:true modules)
 ```
 
@@ -213,6 +221,8 @@ App (session gate: /api/me on boot)
 ├─ Login                      one password field → /api/login
 └─ Dashboard                  owns all data state
    ├─ Sidebar                 Overview item + per-module rows (dot, latency, accent bar)
+   ├─ Topbar                  date + FX chips (1 AED / 1 USD → ₹), /api/rates hourly;
+   │                          chips simply don't render until rates arrive
    ├─ Overview                default view: card grid, "N of M online" summary
    ├─ Viewport                selected module: toolbar (↻ reload, ↗ new tab) + iframe
    │                          · pending → "not connected yet" panel
@@ -262,6 +272,7 @@ Current module endpoints (placeholders until each host is known):
 | 3D-VIEWER (PROTOVIEW) | VPS `:4000` (Express serves built client) | mapped, awaiting VPS IP |
 | STUDENT-FEEDBACK / SYNC FLOW / TIMESHEET / HORILLA | INTERNAL-AGENTICSYSTEM — one docker/nginx origin (`/feedback` `/syncflow` `/timesheet` `/hr/`) | mapped, awaiting host |
 | QC AGENT | standalone FastAPI+React, heading to VPS | awaiting serving decision |
+| SOCIAL PULSE | social-media agents (project starting) | placeholder, awaiting build |
 | WEBSITE | unknown | awaiting details |
 
 ---
@@ -269,13 +280,14 @@ Current module endpoints (placeholders until each host is known):
 ## 9. Testing
 
 - **Server** (`npm --prefix server test`): Vitest + Supertest — auth flows,
-  registry fallback, poller states (online/error/down/pending/timeout), every
-  API route incl. SSO minting/authz. All HTTP is tested through `createApp()`
-  with fakes; no network.
+  registry fallback, poller states (online/error/down/pending/timeout), FX rates
+  caching, every API route incl. SSO minting/authz. All HTTP is tested through
+  `createApp()` with fakes; no network.
 - **Client** (`npm --prefix client test`): Vitest + Testing Library (jsdom) —
-  login, sidebar dots/selection, overview cards/summary/clicks, viewport frame
-  URL building (embed + sso token + fallbacks), postMessage origin filtering.
-- Built TDD; ~54 tests. End-to-end smoke: Playwright (`channel: 'msedge'`)
+  login, sidebar dots/selection, overview cards/summary/clicks, topbar FX chips,
+  viewport frame URL building (embed + sso token + fallbacks), postMessage
+  origin filtering.
+- Built TDD; 66 tests. End-to-end smoke: Playwright (`channel: 'msedge'`)
   driving the real served app — login → overview → module frames.
 
 ## 10. Decision log (the "why"s)

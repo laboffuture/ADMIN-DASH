@@ -19,5 +19,6 @@ export const api = {
   me: () => request('/api/me'),
   projects: () => request('/api/projects'),
   status: () => request('/api/status'),
+  rates: () => request('/api/rates'),
   ssoToken: (projectId) => request(`/api/sso-token/${projectId}`),
 };

@@ -68,6 +68,31 @@ describe('API', () => {
   });
 });
 
+describe('rates endpoint', () => {
+  const RATES = { usdInr: 85.6, aedInr: 23.31, fetchedAt: '2026-06-11T00:00:00.000Z' };
+
+  it('requires a session', async () => {
+    const withRates = buildApp({ rates: { getRates: () => RATES } });
+    expect((await request(withRates).get('/api/rates')).status).toBe(401);
+  });
+
+  it('serves cached FX rates to a logged-in admin', async () => {
+    const withRates = buildApp({ rates: { getRates: () => RATES } });
+    const login = await request(withRates).post('/api/login').send({ password: 'hunter2' });
+    const res = await request(withRates).get('/api/rates').set('Cookie', login.headers['set-cookie']);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ rates: RATES });
+  });
+
+  it('serves null rates when none have been fetched yet', async () => {
+    const empty = buildApp({ rates: { getRates: () => null } });
+    const login = await request(empty).post('/api/login').send({ password: 'hunter2' });
+    const res = await request(empty).get('/api/rates').set('Cookie', login.headers['set-cookie']);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ rates: null });
+  });
+});
+
 describe('SSO token endpoint', () => {
   it('requires a session', async () => {
     expect((await request(app).get('/api/sso-token/a')).status).toBe(401);
