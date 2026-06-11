@@ -68,6 +68,32 @@ describe('API', () => {
   });
 });
 
+describe('agent chat endpoint', () => {
+  const stubAgent = { chat: async (m) => ({ reply: `you said: ${m}`, source: 'local' }) };
+
+  it('requires a session', async () => {
+    const withAgent = buildApp({ agent: stubAgent });
+    expect((await request(withAgent).post('/api/agent/chat').send({ message: 'hi' })).status).toBe(401);
+  });
+
+  it('answers a logged-in admin', async () => {
+    const withAgent = buildApp({ agent: stubAgent });
+    const login = await request(withAgent).post('/api/login').send({ password: 'hunter2' });
+    const res = await request(withAgent).post('/api/agent/chat')
+      .set('Cookie', login.headers['set-cookie']).send({ message: 'status?' });
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ reply: 'you said: status?', source: 'local' });
+  });
+
+  it('rejects empty messages', async () => {
+    const withAgent = buildApp({ agent: stubAgent });
+    const login = await request(withAgent).post('/api/login').send({ password: 'hunter2' });
+    const res = await request(withAgent).post('/api/agent/chat')
+      .set('Cookie', login.headers['set-cookie']).send({ message: '   ' });
+    expect(res.status).toBe(400);
+  });
+});
+
 describe('rates endpoint', () => {
   const RATES = { usdInr: 85.6, aedInr: 23.31, fetchedAt: '2026-06-11T00:00:00.000Z' };
 

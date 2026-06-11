@@ -73,7 +73,8 @@ ADMIN-LINK/
 │  ├─ registry.js         ← projects.json loader with last-good fallback
 │  ├─ poller.js           ← 30s health checks, 5s timeout, in-memory status cache
 │  ├─ rates.js            ← hourly FX fetch (AED→INR, USD→INR), last-good cache
-│  └─ tests/              ← Vitest + Supertest (auth, registry, poller, rates, api, sso)
+│  ├─ agent.js            ← Clawd's brains (local rules + optional Claude API)
+│  └─ tests/              ← Vitest + Supertest (auth, registry, poller, rates, agent, api, sso)
 ├─ client/                ← Vite + React 18 frontend
 │  └─ src/
 │     ├─ App.jsx          ← session gate: boot → Login | Dashboard
@@ -81,6 +82,8 @@ ADMIN-LINK/
 │     ├─ styles.css       ← ALL theming (LOF style gate via CSS variables)
 │     ├─ components/      ← Login · Dashboard · Topbar · Sidebar · Overview · Viewport · Toast
 │     └─ hooks/useHubMessages.js  ← postMessage listener (origin allowlist)
+├─ agent/                 ← CLAWD, the in-portal agent: identity + growth plan
+├─ assembly/              ← build blueprints for future module projects
 └─ docs/
    ├─ superpowers/        ← design spec + implementation plan (how this was built)
    ├─ integration/        ← paste-ready briefs for each module's own repo/session
@@ -152,6 +155,7 @@ GET  /api/me                   → 200 if session valid (client boot check)
 GET  /api/projects             → registry array (hot from disk)
 GET  /api/status               → { [id]: {status, httpStatus, latencyMs, lastChecked} }
 GET  /api/rates                → { rates: {usdInr, aedInr, fetchedAt} | null }
+POST /api/agent/chat           → { reply, source:'claude'|'local' } — Clawd (see agent/ARCHITECTURE.md)
 GET  /api/sso-token/:projectId → { token } (60s JWT, only for sso:true modules)
 ```
 

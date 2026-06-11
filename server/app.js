@@ -8,7 +8,8 @@ const SSO_TOKEN_TTL_SECONDS = 60;
 // clientDist: absolute path to the built client, or null to skip static serving (dev/tests).
 // ssoSecret: shared secret for minting module SSO tokens (HUB_SSO_SECRET); optional.
 // rates: cached FX rates service for the topbar; optional.
-function createApp({ registry, poller, auth, clientDist, ssoSecret, rates }) {
+// agent: Clawd, the in-portal chat agent; optional.
+function createApp({ registry, poller, auth, clientDist, ssoSecret, rates, agent }) {
   const app = express();
   app.use(express.json());
   app.use(cookieParser());
@@ -20,6 +21,13 @@ function createApp({ registry, poller, auth, clientDist, ssoSecret, rates }) {
   app.get('/api/status', auth.requireAuth, (req, res) => res.json(poller.getStatuses()));
   app.get('/api/rates', auth.requireAuth, (req, res) =>
     res.json({ rates: rates ? rates.getRates() : null }));
+
+  app.post('/api/agent/chat', auth.requireAuth, async (req, res) => {
+    if (!agent) return res.status(503).json({ error: 'agent not configured' });
+    const message = String((req.body && req.body.message) || '').trim();
+    if (!message) return res.status(400).json({ error: 'empty message' });
+    res.json(await agent.chat(message));
+  });
 
   // Short-lived token a module exchanges for its own session (no passwords involved).
   app.get('/api/sso-token/:projectId', auth.requireAuth, (req, res) => {
