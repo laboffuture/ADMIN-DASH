@@ -6,7 +6,9 @@ import { Login } from './Login';
 afterEach(() => vi.unstubAllGlobals());
 
 function stubFetch(status, body) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+  // fresh Response per call — a Response body is single-use, and the login
+  // screen now fires more than one fetch (ClaudeMark animation + /api/login)
+  vi.stubGlobal('fetch', vi.fn().mockImplementation(async () =>
     new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } }),
   ));
 }

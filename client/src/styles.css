@@ -220,6 +220,8 @@ button { font: inherit; cursor: pointer; }
 
 /* ── login ── */
 .login-screen { height: 100%; display: grid; place-items: center; }
+.claude-mark { margin: -6px auto 2px; }
+.claude-mark svg { display: block; }
 .login-card {
   width: 340px; padding: 36px 30px; display: flex; flex-direction: column; gap: 14px;
   background: var(--surface); border: 2px solid var(--border);
