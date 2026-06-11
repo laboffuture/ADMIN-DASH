@@ -51,6 +51,12 @@
     "accent": "#C026D3"
   },
   {
+    "id": "mango-brief",
+    "name": "MANGO BRIEF",
+    "description": "daily global tech brief — big tech, chips, IPOs, AI",
+    "accent": "#CA8A04"
+  },
+  {
     "id": "website",
     "name": "WEBSITE",
     "description": "public website",

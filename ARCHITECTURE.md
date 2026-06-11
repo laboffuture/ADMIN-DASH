@@ -273,6 +273,7 @@ Current module endpoints (placeholders until each host is known):
 | STUDENT-FEEDBACK / SYNC FLOW / TIMESHEET / HORILLA | INTERNAL-AGENTICSYSTEM — one docker/nginx origin (`/feedback` `/syncflow` `/timesheet` `/hr/`) | mapped, awaiting host |
 | QC AGENT | standalone FastAPI+React, heading to VPS | awaiting serving decision |
 | SOCIAL PULSE | social-media agents (project starting) | placeholder, awaiting build |
+| MANGO BRIEF | global tech-news briefing (`docs/integration/MANGO-BRIEF-CONCEPT.md`) | placeholder, awaiting build |
 | WEBSITE | unknown | awaiting details |
 
 ---
