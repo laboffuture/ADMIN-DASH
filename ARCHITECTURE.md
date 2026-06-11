@@ -272,9 +272,7 @@ Current module endpoints (placeholders until each host is known):
 | 3D-VIEWER (PROTOVIEW) | VPS `:4000` (Express serves built client) | mapped, awaiting VPS IP |
 | STUDENT-FEEDBACK / SYNC FLOW / TIMESHEET / HORILLA | INTERNAL-AGENTICSYSTEM — one docker/nginx origin (`/feedback` `/syncflow` `/timesheet` `/hr/`) | mapped, awaiting host |
 | QC AGENT | standalone FastAPI+React, heading to VPS | awaiting serving decision |
-| SOCIAL PULSE | social-media agents (project starting) | placeholder, awaiting build |
-| TECH RADAR | global tech-news briefing (`docs/integration/TECH-RADAR-CONCEPT.md`) | placeholder, awaiting build |
-| NORTH STAR / LEDGER / STUDENT 360 / BOARDROOM / PAPER TRAIL | CEO command-center set (`docs/integration/CEO-MODULES.md`) | placeholders, awaiting build |
+| SOCIAL PULSE / TECH RADAR / NORTH STAR / LEDGER / STUDENT 360 / BOARDROOM / PAPER TRAIL | future projects — **detailed build blueprints in `assembly/`** (one self-contained file each) | placeholders, awaiting build |
 | WEBSITE | unknown | awaiting details |
 
 ---

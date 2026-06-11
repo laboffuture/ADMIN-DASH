@@ -6,6 +6,8 @@ hub (iframe with `?embed=1`). Projects are registered in `projects.json` — add
 a module is one JSON entry, no rebuild.
 
 - **Architecture (start here): `ARCHITECTURE.md`**
+- **Future-project build blueprints: `assembly/`** (one self-contained file per
+  planned module — copy into the new repo and build from it)
 - Design spec: `docs/superpowers/specs/2026-06-10-admin-link-hub-design.md`
 - Module integration briefs: `docs/integration/`
 - Deployment: `DEPLOY.md`

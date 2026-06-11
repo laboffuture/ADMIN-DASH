@@ -31,6 +31,7 @@ Theme: the hub already sees everything — these make it *say* something
 
 ---
 
-Future **module** concepts (separate projects, registered as placeholders):
-`docs/integration/CEO-MODULES.md` (NORTH STAR · LEDGER · STUDENT 360 ·
-BOARDROOM · PAPER TRAIL) and `docs/integration/TECH-RADAR-CONCEPT.md`.
+Future **module** projects (registered as placeholders) have detailed,
+self-contained build blueprints in **`assembly/`** — one file per project
+(SOCIAL PULSE · TECH RADAR · NORTH STAR · LEDGER · STUDENT 360 · BOARDROOM ·
+PAPER TRAIL). Quick concept summary: `docs/integration/CEO-MODULES.md`.

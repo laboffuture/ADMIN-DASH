@@ -5,6 +5,10 @@
 > what a CEO asks next: *money, mission, customers, paperwork, investors.*
 > Each follows the standard module contract (`ARCHITECTURE.md` §3) when built;
 > dropping any idea = deleting its entry in `projects.json`.
+>
+> **➜ Detailed build blueprints (architecture, schema, API, phases) live in
+> `assembly/` — one self-contained file per project.** This file is the quick
+> concept summary only.
 
 ## NORTH STAR — goals & KPIs  (`north-star`, #4F46E5)
 
