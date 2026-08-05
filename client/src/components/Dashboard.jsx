@@ -9,12 +9,10 @@ import { Toast } from './Toast';
 import { useHubMessages } from '../hooks/useHubMessages';
 
 const STATUS_POLL_MS = 30000;
-const RATES_POLL_MS = 60 * 60 * 1000;
 
 export function Dashboard({ onLogout }) {
   const [projects, setProjects] = useState([]);
   const [statuses, setStatuses] = useState({});
-  const [rates, setRates] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [toasts, setToasts] = useState([]);
   const nextToastId = useRef(1);
@@ -29,13 +27,6 @@ export function Dashboard({ onLogout }) {
     const timer = setInterval(refreshStatuses, STATUS_POLL_MS);
     return () => clearInterval(timer);
   }, [refreshStatuses]);
-
-  useEffect(() => {
-    const refreshRates = () => api.rates().then((d) => setRates(d.rates)).catch(() => {});
-    refreshRates();
-    const timer = setInterval(refreshRates, RATES_POLL_MS);
-    return () => clearInterval(timer);
-  }, []);
 
   const notify = useCallback(
     (text, origin) => {
@@ -76,7 +67,7 @@ export function Dashboard({ onLogout }) {
         onLogout={handleLogout}
       />
       <div className="hub-main">
-        <Topbar rates={rates} />
+        <Topbar />
         {selected ? (
           <Viewport project={selected} status={statuses[selected.id]} onRetry={refreshStatuses} />
         ) : (

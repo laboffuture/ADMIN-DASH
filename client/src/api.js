@@ -19,7 +19,6 @@ export const api = {
   me: () => request('/api/me'),
   projects: () => request('/api/projects'),
   status: () => request('/api/status'),
-  rates: () => request('/api/rates'),
   agentChat: (message) => request('/api/agent/chat', { method: 'POST', body: JSON.stringify({ message }) }),
   ssoToken: (projectId) => request(`/api/sso-token/${projectId}`),
 };

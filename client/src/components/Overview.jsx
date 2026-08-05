@@ -32,7 +32,6 @@ export function Overview({ projects, statuses, onSelect }) {
               <span className="module-card-status">
                 <span className={`dot dot-${state}`} />
                 <span className="module-card-state">{STATUS_LABEL[state]}</span>
-                {st && st.latencyMs != null && <span className="latency">{st.latencyMs}ms</span>}
               </span>
             </button>
           );

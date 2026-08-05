@@ -9,7 +9,7 @@ const projects = [
 ];
 
 describe('Sidebar', () => {
-  it('renders each project with its status dot and latency', () => {
+  it('renders each project with its status dot', () => {
     const statuses = {
       'code-runner': { status: 'online', latencyMs: 42 },
       protoview: { status: 'down', latencyMs: null },
@@ -19,7 +19,14 @@ describe('Sidebar', () => {
     );
     expect(screen.getByText('Code Runner').closest('button').querySelector('.dot-online')).not.toBeNull();
     expect(screen.getByText('PROTOVIEW').closest('button').querySelector('.dot-down')).not.toBeNull();
-    expect(screen.getByText('42ms')).toBeInTheDocument();
+  });
+
+  it('does not show response latency', () => {
+    const statuses = { 'code-runner': { status: 'online', latencyMs: 42 } };
+    render(
+      <Sidebar projects={projects} statuses={statuses} selectedId="code-runner" onSelect={() => {}} onLogout={() => {}} />,
+    );
+    expect(screen.queryByText('42ms')).toBeNull();
   });
 
   it('shows an unknown dot before the first status arrives', () => {

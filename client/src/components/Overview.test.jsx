@@ -21,10 +21,14 @@ describe('Overview', () => {
     expect(screen.getByText('QC AGENT')).toBeInTheDocument();
   });
 
-  it('shows status label and latency for connected modules', () => {
+  it('shows the status label for connected modules', () => {
     render(<Overview projects={projects} statuses={statuses} onSelect={() => {}} />);
     expect(screen.getByText('ONLINE')).toBeInTheDocument();
-    expect(screen.getByText('88ms')).toBeInTheDocument();
+  });
+
+  it('does not show response latency', () => {
+    render(<Overview projects={projects} statuses={statuses} onSelect={() => {}} />);
+    expect(screen.queryByText('88ms')).toBeNull();
   });
 
   it('marks unconnected modules as placeholders', () => {

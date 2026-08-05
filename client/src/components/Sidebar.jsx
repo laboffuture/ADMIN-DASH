@@ -1,3 +1,5 @@
+import { Box, LayoutGrid, LogOut } from 'lucide-react';
+
 const DOT_TITLE = {
   online: 'online',
   error: 'responding with errors',
@@ -11,12 +13,7 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
     <aside className="sidebar">
       <div className="sidebar-brand">
         <span className="brand-chip" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
+          <LayoutGrid size={20} />
         </span>
         <div>
           <h1>ADMIN-LINK</h1>
@@ -24,19 +21,16 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
         </div>
       </div>
       <nav className="sidebar-projects">
+        <p className="nav-label">Dashboard</p>
         <button
           className={`project-item overview-item ${selectedId === null ? 'selected' : ''}`}
           onClick={() => onSelect(null)}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
+          <LayoutGrid className="nav-icon" size={16} aria-hidden="true" />
           <span className="project-name">Overview</span>
         </button>
-        <p className="nav-label">Projects</p>
+
+        <p className="nav-label nav-label-gap">Projects</p>
         {projects.map((p) => {
           const st = statuses[p.id];
           const state = st ? st.status : 'unknown';
@@ -47,16 +41,19 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
               onClick={() => onSelect(p.id)}
               style={p.accent ? { '--accent': p.accent } : undefined}
             >
-              <span className={`dot dot-${state}`} title={DOT_TITLE[state]} />
+              <Box className="nav-icon" size={16} aria-hidden="true" />
               <span className="project-name">{p.name}</span>
-              {st && st.latencyMs != null && <span className="latency">{st.latencyMs}ms</span>}
+              <span className={`dot dot-${state}`} title={DOT_TITLE[state]} />
             </button>
           );
         })}
         {projects.length === 0 && <p className="sidebar-empty">No projects yet.</p>}
       </nav>
       <footer className="sidebar-footer">
-        <button className="logout" onClick={onLogout}>Sign out</button>
+        <button className="logout" onClick={onLogout}>
+          <LogOut size={14} aria-hidden="true" />
+          Sign out
+        </button>
       </footer>
     </aside>
   );
