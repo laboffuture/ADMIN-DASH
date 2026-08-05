@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 /* ─────────────────────────────────────────────────────────────
-   ADMIN-LINK — LOF Style Gate
+   ADMIN-DASH — LOF Style Gate
    White surface + 2px gray borders + LOF blue #1C4D8C
    (chip = 10% fill / 20% ring), 256px white sidebar.
 
@@ -64,7 +64,7 @@ body {
 }
 button { font: inherit; cursor: pointer; }
 /* machine data lines up in columns */
-.topbar-date, .sidebar-brand p, .login-sub, .agent-chat-sub, .overview-head p {
+.topbar-date, .login-sub, .agent-chat-sub, .overview-head p {
   font-variant-numeric: tabular-nums;
 }
 
@@ -100,18 +100,17 @@ button { font: inherit; cursor: pointer; }
   display: flex; align-items: center; gap: 12px;
   padding: 18px 16px; border-bottom: 2px solid var(--border);
 }
+/* full-colour mark — no tinted chip behind it, the logo carries its own identity */
+.brand-logo { width: 36px; height: 36px; flex: none; object-fit: contain; }
+/* shown only when the logo file is missing */
 .brand-chip {
   width: 36px; height: 36px; flex: none; display: grid; place-items: center;
   background: var(--brand-bg); border: 1px solid var(--brand-border);
   border-radius: var(--radius-control); color: var(--brand);
 }
 .sidebar-brand h1 {
-  margin: 0; font-family: var(--font-heading); font-size: var(--text-sm); font-weight: 700;
+  margin: 0; font-family: var(--font-heading); font-size: var(--text-lg); font-weight: 700;
   letter-spacing: var(--track-title); color: var(--text-primary);
-}
-.sidebar-brand p {
-  margin: 2px 0 0; font-family: var(--font-mono); font-size: var(--text-meta);
-  color: var(--text-muted);
 }
 
 /* zone 2 — grouped nav */

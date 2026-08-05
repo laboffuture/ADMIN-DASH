@@ -42,5 +42,5 @@ const app = createApp({
 poller.start();
 rates.start();
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`ADMIN-LINK hub listening on 0.0.0.0:${PORT} (client ${clientDist ? 'served' : 'NOT built yet'})`);
+  console.log(`ADMIN-DASH hub listening on 0.0.0.0:${PORT} (client ${clientDist ? 'served' : 'NOT built yet'})`);
 });

@@ -10,7 +10,7 @@ export function App() {
     api.me().then(() => setAuthed(true)).catch(() => setAuthed(false));
   }, []);
 
-  if (authed === null) return <div className="boot">ADMIN-LINK</div>;
+  if (authed === null) return <div className="boot">ADMIN-DASH</div>;
   if (!authed) return <Login onSuccess={() => setAuthed(true)} />;
   return <Dashboard onLogout={() => setAuthed(false)} />;
 }

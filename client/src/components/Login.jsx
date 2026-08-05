@@ -23,7 +23,7 @@ export function Login({ onSuccess }) {
   return (
     <div className="login-screen">
       <form className="login-card" onSubmit={submit}>
-        <h1>ADMIN-LINK</h1>
+        <h1>ADMIN-DASH</h1>
         <p className="login-sub">central admin hub</p>
         <input
           type="password"

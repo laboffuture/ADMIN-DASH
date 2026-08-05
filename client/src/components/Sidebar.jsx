@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box, LayoutGrid, LogOut } from 'lucide-react';
 
 const DOT_TITLE = {
@@ -9,16 +10,26 @@ const DOT_TITLE = {
 };
 
 export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) {
+  // The SPA fallback answers a missing asset with index.html, so an absent logo
+  // decodes as a broken image. Fall back to the mark instead.
+  const [logoBroken, setLogoBroken] = useState(false);
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <span className="brand-chip" aria-hidden="true">
-          <LayoutGrid size={20} />
-        </span>
-        <div>
-          <h1>ADMIN-LINK</h1>
-          <p>mission control</p>
-        </div>
+        {logoBroken ? (
+          <span className="brand-chip" aria-hidden="true">
+            <LayoutGrid size={20} />
+          </span>
+        ) : (
+          <img
+            className="brand-logo"
+            src="/lof-logo.png"
+            alt="Lab of Future"
+            onError={() => setLogoBroken(true)}
+          />
+        )}
+        <h1>ADMIN-DASH</h1>
       </div>
       <nav className="sidebar-projects">
         <p className="nav-label">Dashboard</p>
