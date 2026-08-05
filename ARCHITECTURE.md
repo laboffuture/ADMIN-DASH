@@ -105,8 +105,8 @@ service in the fleet.
   "id": "coderunner",          // permanent internal id — also the SSO token audience
   "name": "CODERUNNER",        // sidebar/card display name
   "description": "Python compiler & missions for students",
-  "adminUrl": "https://code-runner-production.up.railway.app/oversight/dashboard",
-  "healthUrl": "https://code-runner-production.up.railway.app/api/health",
+  "adminUrl": "https://coderunner.laboffuture.com/oversight/dashboard",
+  "healthUrl": "https://coderunner.laboffuture.com/api/health",
   "accent": "#76B900",         // module color (active bar, card chip)
   "sso": true                  // hub appends a signed hub_token to the frame URL
 }
@@ -130,6 +130,14 @@ service in the fleet.
 | 3 | A no-auth GET (healthUrl) returning 2xx | Powers the status dot; falls back to adminUrl |
 | 4 | *(optional)* `postMessage({type:'notify', text}, HUB_ORIGIN)` | Module-initiated toasts in the hub |
 | 5 | *(optional, sso)* verify `hub_token` and mint own session | One-login experience (see §6) |
+
+> ⚠️ **Register the module's canonical origin — the one its own API's CORS
+> allowlist accepts.** The frame runs on the module's origin and calls the
+> module's API from there; the hub is not involved. If the registry points at an
+> alternate hostname for the same app (a `*.up.railway.app` default domain
+> instead of the configured custom domain, say), the page loads but every XHR
+> dies on CORS preflight and **login silently does nothing**. This bit CODERUNNER
+> — fixed 2026-08-05 by switching to `coderunner.laboffuture.com`.
 
 ---
 
@@ -272,9 +280,10 @@ Current module endpoints (placeholders until each host is known):
 
 | Module | Where it runs | Status |
 |---|---|---|
-| CODERUNNER | web on Railway (`code-runner-production.up.railway.app`), API+runner on VPS | 🟢 connected, sso minting |
-| 3D-VIEWER (PROTOVIEW) | VPS `:4000` (Express serves built client) | mapped, awaiting VPS IP |
-| STUDENT-FEEDBACK / SYNC FLOW / TIMESHEET / HORILLA | INTERNAL-AGENTICSYSTEM — one docker/nginx origin (`/feedback` `/syncflow` `/timesheet` `/hr/`) | mapped, awaiting host |
+| CODERUNNER | web on Railway via its **custom domain** `coderunner.laboffuture.com`, API+runner on VPS (`api.laboffuture.com`) | 🟢 connected, sso minting |
+| 3D-VIEWER (PROTOVIEW) | VPS `:5000` (Express serves built client + API on one origin) behind `3dviewer.laboffuture.com` | 🟢 connected |
+| STUDENT-FEEDBACK | **its own** docker-compose stack on the VPS (Next.js `:3000` + FastAPI `:8000` + Postgres) behind `feedback.laboffuture.com` — *not* part of the internal system | 🟢 connected |
+| SYNC FLOW / TIMESHEET / HORILLA | INTERNAL-AGENTICSYSTEM — one docker/nginx origin (`/syncflow` `/timesheet` `/hr/`) | mapped, awaiting host |
 | QC AGENT | standalone FastAPI+React, heading to VPS | awaiting serving decision |
 | SOCIAL PULSE / TECH RADAR / NORTH STAR / LEDGER / STUDENT 360 / BOARDROOM / PAPER TRAIL | future projects — **detailed build blueprints in `assembly/`** (one self-contained file each) | placeholders, awaiting build |
 | WEBSITE | unknown | awaiting details |

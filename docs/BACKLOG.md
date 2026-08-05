@@ -30,6 +30,22 @@ Theme: the hub already sees everything — these make it *say* something
 9. **Weekly trends report** — Monday auto-generated week-over-week PDF/email.
 10. **Hub SSO** — phase-2 signed-token exchange (spec §3): one login unlocks
     every module inside the frames.
+    *Hub half: done and verified 2026-08-05 — `/api/sso-token/coderunner` mints
+    a valid HS256 token (`sub=hub-admin`, `aud=coderunner`, 60s) and the frame
+    URL carries it. CODERUNNER's half is unfinished, two pieces:*
+    - **API** (`Coderunner-Backend`, this VPS): `POST /auth/sso/hub` is deployed
+      but answers `503 "Hub SSO is not configured"` — `HUB_SSO_SECRET` (same
+      value as the hub's `.env`) and `HUB_SSO_AUDIENCE=coderunner` are missing
+      from the pm2 env. Note the audience is `coderunner`, not the `code-runner`
+      shown in `apps/api/.env.example`; it must equal the token's `aud`
+      byte-for-byte. `HUB_SSO_USERNAME` must name an account whose role is
+      `admin` — `/oversight/*` is gated by `requireRole="admin"`.
+    - **Frontend** (`Coderunner-Frontend`, Railway): no `hub_token` handling
+      exists at all, and `ProtectedRoute.tsx:28` redirects with
+      `router.push('/login')`, dropping the query string — so the token must
+      first be made to survive that redirect, then consumed on the login page.
+    *Until both ship, framing CODERUNNER shows its own login form, which works
+    normally (fixed 2026-08-05 — see the CORS/origin warning in ARCHITECTURE §3).*
 
 ---
 

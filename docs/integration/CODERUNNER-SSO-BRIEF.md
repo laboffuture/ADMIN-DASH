@@ -17,14 +17,17 @@ Token contract (mint side, already live on the hub):
 
 ## Tasks in this repo
 
-1. **Backend (Express API): add `POST /auth/hub-sso`.**
-   - Body: `{ "token": "<jwt>" }`.
-   - Verify: `jwt.verify(token, process.env.HUB_SSO_SECRET, { audience: 'coderunner', algorithms: ['HS256'] })`.
-   - On success: issue this app's OWN auth token for the designated admin
-     account (map `sub: hub-admin` → the `owner` admin user; look it up by
-     username, never hardcode credentials) — same response shape as the normal
-     login endpoint so the frontend can reuse its login handling.
-   - On failure: 401. Never fall through to password logic.
+1. ~~**Backend (Express API): add the exchange endpoint.**~~ **BUILT** — shipped as
+   `POST /auth/sso/hub` (not `/auth/hub-sso`), body `{ "hub_token": "<jwt>" }`
+   (not `token`), in `apps/api/src/routes/auth.routes.ts:201`. Verifies via
+   `verifyHubSsoToken`, maps to the `HUB_SSO_USERNAME` account, returns the same
+   shape as `/login`. 401 on a bad token, 503 when SSO env is absent.
+   - ⚠️ **Not yet configured on the running API** — it answers `503` today.
+     Set `HUB_SSO_SECRET` (the hub's value) and `HUB_SSO_AUDIENCE=coderunner`
+     in the pm2 env, plus `HUB_SSO_USERNAME` naming an **`admin`-role** account
+     (`/oversight/*` is gated by `requireRole="admin"`), then restart api-1/api-2.
+   - Audience is `coderunner` — the hub id. `apps/api/.env.example` shows
+     `code-runner`; that value would fail verification.
 
 2. **Frontend (Next.js): consume `hub_token`.**
    - Wherever unauthenticated visitors to `/oversight/*` are redirected to

@@ -3,8 +3,8 @@
     "id": "coderunner",
     "name": "CODERUNNER",
     "description": "Python compiler & missions for students",
-    "adminUrl": "https://code-runner-production.up.railway.app/oversight/dashboard",
-    "healthUrl": "https://code-runner-production.up.railway.app/api/health",
+    "adminUrl": "https://coderunner.laboffuture.com/oversight/dashboard",
+    "healthUrl": "https://coderunner.laboffuture.com/api/health",
     "accent": "#76B900",
     "sso": true
   },
@@ -12,12 +12,16 @@
     "id": "student-feedback",
     "name": "STUDENT-FEEDBACK",
     "description": "camera-based class ratings — smiles & hand-gesture stars",
+    "adminUrl": "https://feedback.laboffuture.com/admin",
+    "healthUrl": "https://feedback.laboffuture.com/health",
     "accent": "#DB2777"
   },
   {
     "id": "3d-viewer",
     "name": "3D-VIEWER",
     "description": "PROTOVIEW — 3D model review & voting",
+    "adminUrl": "https://3dviewer.laboffuture.com/admin/dashboard",
+    "healthUrl": "https://3dviewer.laboffuture.com/health",
     "accent": "#1C4D8C"
   },
   {
