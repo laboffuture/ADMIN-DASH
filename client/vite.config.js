@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: { '/api': 'http://localhost:5500' },
+    proxy: { '/api': 'http://localhost:5501' },
   },
   test: {
     environment: 'jsdom',

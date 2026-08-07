@@ -24,7 +24,7 @@ export function Sidebar({ projects, statuses, selectedId, onSelect, onLogout }) 
         ) : (
           <img
             className="brand-logo"
-            src="/lof-logo.png"
+            src="/lof-logotype.png"
             alt="Lab of Future"
             onError={() => setLogoBroken(true)}
           />
