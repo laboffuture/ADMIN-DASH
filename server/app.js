@@ -29,6 +29,37 @@ function createApp({ registry, poller, auth, clientDist, ssoSecret, rates, agent
     res.json(await agent.chat(message));
   });
 
+  // Proxy endpoint for modules with frame-blocking headers (X-Frame-Options)
+  app.get('/api/proxy/:projectId', auth.requireAuth, async (req, res) => {
+    const project = registry.load().find((p) => p.id === req.params.projectId);
+    if (!project || !project.adminUrl) {
+      return res.status(404).send('Project not found or missing adminUrl');
+    }
+    try {
+      const response = await fetch(project.adminUrl, {
+        headers: { 'User-Agent': 'AdminLinkHub/1.0' },
+      });
+      if (!response.ok) {
+        return res.status(response.status).send(`Upstream server returned ${response.status}`);
+      }
+      let html = await response.text();
+      const targetUrl = new URL(project.adminUrl);
+      const targetPath = targetUrl.pathname + targetUrl.search;
+      const headInjection = `<head><base href="${targetUrl.origin}/"><script>(function(){try{if(window.location.pathname!==${JSON.stringify(targetPath)}){window.history.replaceState(null,'',${JSON.stringify(targetPath)});} }catch(e){}})();</script>`;
+      if (html.includes('<head>')) {
+        html = html.replace('<head>', headInjection);
+      } else if (html.includes('<HEAD>')) {
+        html = html.replace('<HEAD>', headInjection);
+      }
+      res.removeHeader('x-frame-options');
+      res.removeHeader('content-security-policy');
+      res.setHeader('content-type', response.headers.get('content-type') || 'text/html');
+      res.send(html);
+    } catch (err) {
+      res.status(502).send('Error proxying project: ' + err.message);
+    }
+  });
+
   // Short-lived token a module exchanges for its own session (no passwords involved).
   app.get('/api/sso-token/:projectId', auth.requireAuth, (req, res) => {
     const project = registry.load().find((p) => p.id === req.params.projectId);

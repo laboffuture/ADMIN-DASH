@@ -146,3 +146,14 @@ describe('SSO token endpoint', () => {
     expect(res.status).toBe(503);
   });
 });
+
+describe('Proxy endpoint', () => {
+  it('requires a session', async () => {
+    expect((await request(app).get('/api/proxy/a')).status).toBe(401);
+  });
+
+  it('rejects unknown modules', async () => {
+    const cookie = await loginCookie();
+    expect((await request(app).get('/api/proxy/nope').set('Cookie', cookie)).status).toBe(404);
+  });
+});

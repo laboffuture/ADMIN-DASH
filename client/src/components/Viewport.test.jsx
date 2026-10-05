@@ -82,6 +82,19 @@ describe('Viewport', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
+  it('links out instead of framing when the module refuses embedding', () => {
+    const p = { ...project, embed: false };
+    render(<Viewport project={p} status={{ status: 'online' }} onRetry={() => {}} />);
+    expect(document.querySelector('iframe')).toBeNull();
+    expect(screen.getByText(/opens in its own tab/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /open PROTOVIEW/i })).toHaveAttribute('href', project.adminUrl);
+  });
+
+  it('still frames modules that do not set embed', () => {
+    render(<Viewport project={project} status={{ status: 'online' }} onRetry={() => {}} />);
+    expect(screen.getByTitle('PROTOVIEW').tagName).toBe('IFRAME');
+  });
+
   it('shows a not-connected panel for modules without an adminUrl', () => {
     const pending = { id: 'qc-agent', name: 'QC AGENT', description: 'quality control agent' };
     render(<Viewport project={pending} status={{ status: 'pending' }} onRetry={() => {}} />);

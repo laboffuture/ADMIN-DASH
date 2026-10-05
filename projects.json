@@ -3,10 +3,11 @@
     "id": "coderunner",
     "name": "CODERUNNER",
     "description": "Python compiler & missions for students",
-    "adminUrl": "https://coderunner.laboffuture.com/oversight/dashboard",
+    "adminUrl": "https://coderunner.laboffuture.com/login",
     "healthUrl": "https://coderunner.laboffuture.com/api/health",
     "accent": "#76B900",
-    "sso": true
+    "sso": true,
+    "embed": false
   },
   {
     "id": "student-feedback",
@@ -25,9 +26,20 @@
     "accent": "#1C4D8C"
   },
   {
-    "id": "qc-agent",
-    "name": "QC AGENT",
-    "description": "AI quality control for STEM manuals",
+    "id": "site-attendance",
+    "name": "SITE ATTENDANCE",
+    "description": "map-based check-in & attendance for site teams",
+    "adminUrl": "https://siteattendance.toprockglobal.com/dashboard",
+    "healthUrl": "https://siteattendance.toprockglobal.com/healthz",
+    "accent": "#EA580C",
+    "embed": false
+  },
+  {
+    "id": "cmg-payment-request",
+    "name": "CMG PAYMENT REQUEST",
+    "description": "CMG payment requests & workflow approval",
+    "adminUrl": "https://paymentrequest.toprockglobal.com/",
+    "healthUrl": "https://paymentrequest.toprockglobal.com/",
     "accent": "#D97706"
   },
   {

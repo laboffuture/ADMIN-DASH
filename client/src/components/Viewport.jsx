@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 
-function buildFrameSrc(adminUrl, hubToken) {
-  let src = adminUrl + (adminUrl.includes('?') ? '&' : '?') + 'embed=1';
+function buildFrameSrc(project, hubToken) {
+  if (!project || !project.adminUrl) return '';
+  if (project.proxy) {
+    return `/api/proxy/${project.id}`;
+  }
+  let src = project.adminUrl + (project.adminUrl.includes('?') ? '&' : '?') + 'embed=1';
   if (hubToken) src += `&hub_token=${encodeURIComponent(hubToken)}`;
   return src;
 }
@@ -42,6 +46,10 @@ export function Viewport({ project, status, onRetry }) {
   const notConnected = !project.adminUrl;
   const down = status && status.status === 'down';
   const ssoLoading = needsSso && hubToken === 'loading';
+  // Some modules refuse framing (X-Frame-Options / CSP frame-ancestors). The
+  // browser blocks those before we can see it, so the module declares it in
+  // projects.json and we offer a launch panel rather than a blank frame.
+  const noEmbed = project.embed === false;
 
   return (
     <main className="viewport">
@@ -69,6 +77,14 @@ export function Viewport({ project, status, onRetry }) {
             <a href={project.adminUrl} target="_blank" rel="noreferrer">Open in new tab ↗</a>
           </div>
         </div>
+      ) : noEmbed ? (
+        <div className="down-panel">
+          <h2>{project.name} opens in its own tab</h2>
+          <p>This module does not allow embedding, so the hub links out to it instead.</p>
+          <div className="down-actions">
+            <a href={project.adminUrl} target="_blank" rel="noreferrer">Open {project.name} ↗</a>
+          </div>
+        </div>
       ) : ssoLoading ? (
         <div className="down-panel">
           <p>Connecting…</p>
@@ -78,7 +94,10 @@ export function Viewport({ project, status, onRetry }) {
           key={`${project.id}-${frameKey}`}
           className="module-frame"
           title={project.name}
-          src={buildFrameSrc(project.adminUrl, typeof hubToken === 'string' && hubToken !== 'loading' ? hubToken : null)}
+          src={buildFrameSrc(project, typeof hubToken === 'string' && hubToken !== 'loading' ? hubToken : null)}
+          allow="clipboard-write; fullscreen"
+          referrerPolicy="strict-origin-when-cross-origin"
+          loading="lazy"
         />
       )}
     </main>
